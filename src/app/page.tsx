@@ -5,6 +5,7 @@ import { useAccount } from "wagmi";
 import Onboarding from "../components/Onboarding";
 import BoxIcon from "@/public/icons/box.svg";
 import { Button } from "@/components/ui/button";
+import TopUpButton from "../components/TopUpButton";
 
 export default function Page() {
   const { address } = useAccount();
@@ -70,19 +71,7 @@ function Heading() {
               </span>
             </div>
 
-            <div className="flex py-1 px-2.5 items-center justify-center rounded-full text-md shadow border border-primary-500 font-medium bg-primary-400 text-center text-white">
-              <div className="flex justify-center gap-4">
-                <div className="flex items-center gap-1">
-                  <span className="font-bold text-sm">Top Up</span>
-
-                  <img
-                    src="/icons/plus.svg"
-                    className="w-4 h-4"
-                    alt="Plus icon"
-                  />
-                </div>
-              </div>
-            </div>
+            <TopUpButton />
           </div>
         </div>
       </div>
