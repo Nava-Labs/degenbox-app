@@ -36,7 +36,8 @@
     "react-dom": "^18",
     "siwe": "^2.3.2",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.0",
