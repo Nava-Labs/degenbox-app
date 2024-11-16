@@ -1,4 +1,23 @@
 import { Button } from "@/components/ui/button";
+import {
+  Address,
+  Avatar,
+  EthBalance,
+  Identity,
+  Name,
+} from "@coinbase/onchainkit/identity";
+import {
+  ConnectWallet,
+  Wallet,
+  WalletDefault,
+  WalletDropdown,
+  WalletDropdownBasename,
+  WalletDropdownDisconnect,
+  WalletDropdownFundLink,
+  WalletDropdownLink,
+} from "@coinbase/onchainkit/wallet";
+import SignupButton from "./SignupButton";
+import WalletWrapper from "./WalletWrapper";
 
 export default function Onboarding() {
   return (
@@ -26,8 +45,11 @@ export default function Onboarding() {
       </div>
 
       <div className="flex flex-col w-screen px-4 items-center justify-end fixed bottom-8">
-        <Button className="hover:translate-y-0 active:translate-y-1 shadow-sm hover:shadow-lg active:shadow-inner transition-all duration-75 ease-in-out">
-          Sign-in
+        <Button className="w-full hover:translate-y-0 active:translate-y-1 transition-all duration-75 ease-in-out">
+          <WalletWrapper
+            text="Sign in"
+            className="w-full bg-transparent hover:translate-y-0 active:translate-y-1 shadow-sm hover:shadow-lg active:shadow-inner transition-all duration-75 ease-in-out"
+          />
         </Button>
         <span className="mt-1 text-md font-thin">Continue as guest</span>
       </div>
