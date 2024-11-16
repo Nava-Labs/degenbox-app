@@ -25,6 +25,7 @@ import { formatUnits } from "viem";
 import { DegenBoxABI } from "../lib/abi/degen-box.abi";
 import React from "react";
 import { useBalance } from "wagmi";
+import { Identity, Name } from "@coinbase/onchainkit/identity";
 
 // Type definition for Box
 type Box = {
@@ -164,7 +165,9 @@ function Heading() {
         </div>
 
         <div className="flex px-3 py-0.5 font-bold items-center justify-center rounded-full text-[10px] bg-[#C2E6F5] border-2 border-primary-900 text-center text-primary-900">
-          <span>{address}</span>
+          <Identity>
+            <Name></Name>
+          </Identity>
         </div>
 
         <div className="flex flex-col space-y-1 items-center justify-center px-4 mt-2 leading-none w-28">
