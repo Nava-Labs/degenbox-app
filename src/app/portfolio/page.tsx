@@ -5,7 +5,8 @@ import { TradingCard } from "@/components/trading-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Link, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 import { useAccount } from "wagmi";
 
 export default function Portfolio() {
@@ -37,9 +38,13 @@ export default function Portfolio() {
                 Copy Address
               </span>
             </div>
-            <div className="flex gap-1">
+            <div className="flex gap-1 items-center">
               <img src="/icons/external-link.svg" className="h-4 w-4" />
-              <Link href={`https://base.blockscout.com/address/${address}`}>
+              <Link
+                href={`https://base.blockscout.com/address/${address}`}
+                target="_blank"
+                rel="noreferrer"
+              >
                 <span className="text-xs font-bold text-primary-900">
                   Open Explorer
                 </span>
