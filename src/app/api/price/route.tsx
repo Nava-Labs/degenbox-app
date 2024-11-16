@@ -37,8 +37,9 @@ const getPythPrice = async (pythPriceId: string) => {
       throw new Error('Price feed not found')
     }
     
-    const price = priceFeeds[0].price
-    return price.price * Math.pow(10, -price.expo)
+    const price:any = priceFeeds[0]
+    console.log("ini price ", price);
+    return price * Math.pow(10, -price.expo)
   } catch (error) {
     console.error(`Error fetching price for ${pythPriceId}:`, error)
     return 0
