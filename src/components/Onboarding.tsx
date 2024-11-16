@@ -10,10 +10,15 @@ export default function Onboarding() {
       </div>
 
       <div className="flex flex-col space-y-2 w-screen px-4 items-center justify-center">
-        <h1 className="font-bold text-left text-5xl text-[#A8CFFF] drop-shadow-[0_4px_4px_rgba(55, 112, 182, 0.6)]">
-          Buy memecoins from multiple chains easily
-        </h1>
-        <h2 className="text-left text-primary">
+        <div className="relative">
+          <h1 className="font-black text-left text-5xl heading-shadow">
+            Buy memecoins from multiple chains easily
+          </h1>
+          <h1 className="font-black text-left text-5xl text-primary-600 absolute top-0 -z-10 -translate-x-0.5 translate-y-0.5">
+            Buy memecoins from multiple chains easily
+          </h1>
+        </div>
+        <h2 className="text-left text-foreground">
           Onramp to your Base Smart Wallet, buy memecoins from Ethereum and
           Solana simultaneously.
         </h2>

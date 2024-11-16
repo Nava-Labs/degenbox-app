@@ -14,7 +14,17 @@
     --input: 214.3 31.8% 91.4%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 47.4% 11.2%;
-    --primary: 222.2 47.4% 11.2%;
+    --primary: var(--primary-300);
+    --primary-50: 213 97% 97%;
+    --primary-100: 213 99% 90%;
+    --primary-200: 213 99% 83%;
+    --primary-300: 213 100% 76%;
+    --primary-400: 213 94% 68%;
+    --primary-500: 213 65% 57%;
+    --primary-600: 213 54% 46%;
+    --primary-700: 213 59% 37%;
+    --primary-800: 213 64% 27%;
+    --primary-900: 213 70% 18%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -58,6 +68,16 @@
     @apply font-sans antialiased bg-background;
   }
 }
+
+.heading-shadow {
+  color: hsl(var(--primary-300));
+  text-shadow:
+    -1px -1px 0 hsl(var(--primary-600)),
+    1px -1px 0 hsl(var(--primary-600)),
+    -1px 1px 0 hsl(var(--primary-600)),
+    1px 1px 0 hsl(var(--primary-600));
+}
+
 .ockConnectWallet_Container span {
   color: #030712;
 }
