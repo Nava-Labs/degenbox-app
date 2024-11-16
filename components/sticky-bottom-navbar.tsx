@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function StickyBottomNavbar() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-sm border-t">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-lg border-t">
       <div className="container flex items-center justify-around h-16">
         <Link
           href="/"

@@ -16,8 +16,8 @@ export default function Page() {
       ) : (
         <>
           <Heading />
-          <div className="px-6 w-full min-h-full pt-12 bg-white">
-            <div className="flex space-x-2.5 mb-4">
+          <div className="px-6 w-full min-h-full pt-8 pb-20 bg-white">
+            <div className="flex space-x-2.5 mb-2">
               <div className="w-full rounded-full h-2 bg-primary-300" />
               <div className="w-full rounded-full h-2 bg-primary-300 opacity-25" />
               <div className="w-full rounded-full h-2 bg-primary-300 opacity-25" />
@@ -34,7 +34,7 @@ export default function Page() {
 function Heading() {
   const { address } = useAccount();
   return (
-    <div className="w-full relative mb-12">
+    <div className="w-full relative">
       <img src="/rainbow-header.svg" className="w-full" alt="Rainbow header" />
 
       <div className="absolute top-[10%] left-0 right-0 flex flex-col items-center w-full">
@@ -70,7 +70,7 @@ function Heading() {
               </span>
             </div>
 
-            <div className="flex py-1 px-2.5 items-center justify-center rounded-full text-md shadow-lg font-medium bg-primary-400 text-center text-white">
+            <div className="flex py-1 px-2.5 items-center justify-center rounded-full text-md shadow border border-primary-500 font-medium bg-primary-400 text-center text-white">
               <div className="flex justify-center gap-4">
                 <div className="flex items-center gap-1">
                   <span className="font-bold text-sm">Top Up</span>
@@ -203,11 +203,11 @@ function BoxList() {
           </li>
         ))}
       </ul>
-      <div className="flex justify-center space-x-2">
+      <div className="flex space-x-2 border-box">
         <Button className="mt-8 font-black h-11 w-11 bg-white border-b-4">
           <span className="text-primary-700 text-xl">-</span>
         </Button>
-        <Button className="mt-8 w-full font-black border-b-4" size={"lg"}>
+        <Button className="mt-8 w-fit font-black border-b-4 rounded-2xl h-11 w-full">
           Buy 1 Box <span className="text-primary-100">$1.2</span>
         </Button>
         <Button className="mt-8 font-black h-11 w-11 bg-white border-b-4">
