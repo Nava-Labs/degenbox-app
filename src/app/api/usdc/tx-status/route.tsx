@@ -8,16 +8,15 @@ const supabase = createClient(
 )
 
 // Add these constants at the top with other imports
-const CONTRACT_ADDRESS = 'YOUR_CONTRACT_ADDRESS';
 const CONTRACT_ABI = [
   'function triggerReceive(bytes memory message, bytes memory attestation)'
 ];
 
 // Add this helper function
-async function callTriggerReceive(message: string, attestation: string) {
+async function callTriggerReceive(degenBoxAddress: string, message: string, attestation: string, chainRPC: string) {
   const provider = new ethers.JsonRpcProvider(process.env.BASE_RPC_URL);
   const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
-  const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, wallet);
+  const contract = new ethers.Contract(degenBoxAddress, CONTRACT_ABI, wallet);
 
   const tx = await contract.callTriggerReceive(message, attestation);
   return await tx.wait();
@@ -52,7 +51,7 @@ export async function GET() {
         if (attestationData.messages?.[0]?.attestation!= "PENDING") {
           // Return both the supabase update promise and the transaction data
           for(let i=0;i<attestationData.messages.length;i++){
-            callTriggerReceive(attestationData.messages?.[i]?.message, attestationData.messages?.[i]?.attestation) //no need to await
+            await callTriggerReceive(transaction.degenbox_address, attestationData.messages?.[i]?.message, attestationData.messages?.[i]?.attestation, transaction.chain_rpc)
           }
           return {
             updatePromise: supabase
@@ -61,6 +60,8 @@ export async function GET() {
               .eq('id', transaction.id),
             transaction
           };
+        }else {
+          console.log(transaction.tx_hash, " still not attested ")
         }
         return null;
       } catch (fetchError) {
@@ -100,9 +101,9 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     // Validate required fields
-    if (!body.tx_hash || !body.domain_id) {
+    if (!body.tx_hash || !body.domain_id || !body.degenbox_address) {
       return NextResponse.json(
-        { error: 'tx_hash and domain_id are required' },
+        { error: 'tx_hash and domain_id and degenbox_address are required' },
         { status: 400 }
       );
     }
