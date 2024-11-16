@@ -1,11 +1,13 @@
+import { Button } from "@/components/ui/button";
+
 export default function Onboarding() {
   return (
-    <div className="h-screen w-full flex flex-col items-center content-between justify-between ">
-      <div className="flex justify-center items-center">
+    <div className="h-screen w-full flex flex-col items-center content-between">
+      <div className="flex justify-center items-center h-[50vh] overflow-hidden mt-10">
         <img
           src="/onboarding-illustration.png"
           alt="Onboarding DegenBox Illustration"
-          className="h-full w-full"
+          className="h-[90%] w-full object-cover"
         />
       </div>
 
@@ -19,16 +21,15 @@ export default function Onboarding() {
           </h1>
         </div>
         <h2 className="text-left text-foreground">
-          Onramp to your Base Smart Wallet, buy memecoins from Ethereum and
-          Solana simultaneously.
+          Onramp to your Base Smart Wallet, buy memecoins from any chain.
         </h2>
       </div>
 
-      <div className="flex flex-col w-screen px-4 items-center justify-center">
-        <button className="w-full h-14 inline-flex items-center justify-center h-13 px-5 border border-[#3770B6] rounded-sm text-base text-[#ffffff] fill-[#ffffff] font-bold transition-colors bg-[#A8CFFF] hover:bg-[#AE7AFF]/90">
+      <div className="flex flex-col w-screen px-4 items-center justify-end fixed bottom-8">
+        <Button className="hover:translate-y-0 active:translate-y-1 shadow-sm hover:shadow-lg active:shadow-inner transition-all duration-75 ease-in-out">
           Sign-in
-        </button>
-        <span>Continue as guest</span>
+        </Button>
+        <span className="mt-1">Continue as guest</span>
       </div>
     </div>
   );
