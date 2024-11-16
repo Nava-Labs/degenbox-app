@@ -74,7 +74,7 @@
   text-shadow:
     -1px -1px 0 hsl(var(--primary-600)),
     1px -1px 0 hsl(var(--primary-600)),
-    -1px 1px 0 hsl(var(--primary-600)),
+    -2px 2px 0 hsl(var(--primary-600)),
     1px 1px 0 hsl(var(--primary-600));
 }
 
