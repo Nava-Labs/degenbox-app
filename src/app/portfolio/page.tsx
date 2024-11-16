@@ -27,7 +27,7 @@ export default function Portfolio() {
               <span className="text-sm font-bold text-primary-800">
                 navalabs.base.eth
               </span>
-              <span className="text-xs font-bold text-primary-800">
+              <span className="text-xs font-bold text-primary-800 truncate max-w-32">
                 {address}
               </span>
             </div>
