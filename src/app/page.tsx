@@ -10,7 +10,7 @@ export default function Page() {
   const { address } = useAccount();
 
   return (
-    <div className="min-h-screen w-full">
+    <div>
       {!address ? (
         <Onboarding />
       ) : (

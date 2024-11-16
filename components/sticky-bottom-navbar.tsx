@@ -1,9 +1,8 @@
-import { Box, CircleUserRound, Compass, Home, User } from "lucide-react";
 import Link from "next/link";
 
 export function StickyBottomNavbar() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-sm border-t pb-7">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-sm border-t">
       <div className="container flex items-center justify-around h-16">
         <Link
           href="/"
