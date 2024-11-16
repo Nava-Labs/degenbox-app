@@ -1,24 +1,29 @@
-"use client";
+'use client';
 
-import { StickyBottomNavbar } from "@/components/sticky-bottom-navbar";
-import { useAccount } from "wagmi";
-import { useQuery } from "@tanstack/react-query";
-import Onboarding from "../components/Onboarding";
-import BoxIcon from "@/public/icons/box.svg";
-import { Button } from "@/components/ui/button";
-import axios from "axios";
-import TopUpButton from "../components/TopUpButton";
-import { formatEther } from "ethers";
-import { truncateAddress } from "../lib/utiles";
-import Loading from "@/public/loading.svg";
-import RainbowHeader from "@/public/rainbow-header.svg";
+import { StickyBottomNavbar } from '@/components/sticky-bottom-navbar';
+import { useAccount, useReadContract, useWriteContract } from 'wagmi';
+import { useQuery } from '@tanstack/react-query';
+import Onboarding from '../components/Onboarding';
+import BoxIcon from '@/public/icons/box.svg';
+import { Button } from '@/components/ui/button';
+import axios from 'axios';
+import TopUpButton from '../components/TopUpButton';
+import { formatEther } from 'ethers';
+import { cn, formatCurrency, truncateAddress } from '../lib/utiles';
+import Loading from '@/public/loading.svg';
+import RainbowHeader from '@/public/rainbow-header.svg';
 import {
   Carousel,
+  CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "@/components/ui/carousel";
-import { useState } from "react";
-import { TransactionModal } from "../components/TransactionModal";
+} from '@/components/ui/carousel';
+import { useMemo, useState } from 'react';
+import { TransactionModal } from '../components/TransactionModal';
+import { USDC_ABI } from '../lib/abi/usdc.abi';
+import { formatUnits } from 'viem';
+import { DegenBoxABI } from '../lib/abi/degen-box.abi';
+import React from 'react';
 
 // Type definition for Box
 type Box = {
@@ -50,20 +55,36 @@ type CctpDomainMap = {
 
 export default function Page() {
   const { address } = useAccount();
-  const [currentIndex, setCurrentIndex] = useState<any>();
-  console.log("currentIndex", currentIndex);
+
+  const [api, setApi] = React.useState<CarouselApi>();
 
   const {
     data: boxes,
     isLoading,
     error,
   } = useQuery<Box[]>({
-    queryKey: ["boxes"],
+    queryKey: ['boxes'],
     queryFn: async () => {
-      const response = await axios.get("/api/boxes/");
+      const response = await axios.get('/api/boxes/');
       return response.data.boxes;
     },
   });
+
+  const [current, setCurrent] = React.useState(0);
+  const [count, setCount] = React.useState(0);
+
+  React.useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+
+    api.on('select', () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
 
   if (isLoading) {
     return (
@@ -87,24 +108,27 @@ export default function Page() {
             {!!boxes && (
               <>
                 <div className="flex space-x-2.5 mb-2">
-                  {/* {boxes.map((_, index) => (
-                    <div
-                      key={index}
-                      className={`w-full rounded-full h-1.5 bg-primary-300 transition-opacity duration-300 ${
-                        index === currentIndex ? "" : "opacity-25"
-                      }`}
-                    />
-                  ))} */}
+                  {Array(count)
+                    .fill(0)
+                    .map((_, index) => (
+                      <div
+                        key={_}
+                        className={cn(
+                          'w-full rounded-full h-1.5 bg-primary-500 transition-opacity duration-300',
+                          index === current - 1 ? 'opacity-100' : 'opacity-25',
+                        )}
+                      />
+                    ))}
                 </div>
-                <Carousel opts={{ loop: true }}>
+                <Carousel setApi={setApi}>
                   <CarouselContent>
-                    {boxes.map((box, index) => (
+                    {boxes.map((box) => (
                       <CarouselItem
                         key={box.id}
-                        onSelect={(index) => {
-                          console.log(index);
-                          setCurrentIndex(index);
-                        }}
+                        // onSelect={(index) => {
+                        //   console.log(index);
+                        //   setCurrentIndex(index);
+                        // }}
                       >
                         <BoxList box={box} tokens={box.token_list} />
                       </CarouselItem>
@@ -170,11 +194,36 @@ function Heading() {
   );
 }
 
+const USDC_ADDRESS = '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913';
 function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
+  const [amount, setAmount] = useState<number>(1);
+  const { address } = useAccount();
+  const { data: allowance } = useReadContract({
+    address: USDC_ADDRESS as `0x${string}`,
+    abi: USDC_ABI,
+    functionName: 'allowance',
+    args: [address!, box.address as `0x${string}`],
+  });
+
+  const { data: hash, isPending, writeContract } = useWriteContract();
+
+  const isApproved = useMemo(() => {
+    const formattedAllowance = formatUnits(allowance ?? BigInt(0), 6);
+    return +formattedAllowance >= +amount;
+  }, [amount, allowance]);
+
+  const tokenPrices = useMemo(
+    () =>
+      tokens
+        .filter((token) => +token.domain_id !== 5) // do not include solana token
+        .map((token) => BigInt(token.pricePerToken)),
+    [tokens],
+  );
+
   const cctpDomainMap: CctpDomainMap = {
-    0: "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png",
-    5: "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
-    6: "https://s2.coinmarketcap.com/static/img/coins/64x64/27716.png",
+    0: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
+    5: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
+    6: 'https://s2.coinmarketcap.com/static/img/coins/64x64/27716.png',
   };
 
   return (
@@ -242,20 +291,69 @@ function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
                 ${item.formattedUSDValue}
               </p>
               <p className="text-primary-400 font-bold text-xs mt-1 leading-none">
-                {formatEther(item.amount)} {item.name}
+                {formatEther(BigInt(item.amount))} {item.name}
               </p>
             </div>
           </li>
         ))}
       </ul>
       <div className="flex space-x-2 border-box">
-        <Button className="mt-8 px-4 !w-11" variant={"outline"} size={"lg"}>
+        <Button
+          className="mt-8 px-4 !w-11"
+          variant={'outline'}
+          size={'lg'}
+          onClick={() => setAmount(amount - 1)}
+          disabled={amount === 1}
+        >
           <span className="text-primary-700 text-xl">-</span>
         </Button>
-        <Button className="mt-8 w-fit border-b-4 h-11 w-full" size={"lg"}>
-          Buy 1 Box <span className="text-primary-100">$1.2</span>
-        </Button>
-        <Button className="mt-8 px-4 w-11" variant={"outline"} size={"lg"}>
+        {!isApproved && (
+          <Button
+            size={'lg'}
+            className="flex justify-center items-center mt-8 w-fit border-b-4 h-11 w-full text-lg"
+            onClick={() => {
+              writeContract({
+                address: USDC_ADDRESS as `0x${string}`,
+                abi: USDC_ABI,
+                functionName: 'approve',
+                args: [
+                  box.address as `0x${string}`,
+                  BigInt(
+                    '115792089237316195423570985008687907853269984665640564039457584007913129639935',
+                  ),
+                ],
+              });
+            }}
+          >
+            {isPending ? <span>Approving...</span> : <span>Approve USDC</span>}
+          </Button>
+        )}
+        {!!isApproved && (
+          <Button
+            size={'lg'}
+            className="flex justify-center items-center mt-8 w-fit border-b-4 h-11 w-full text-lg"
+            onClick={() => {
+              console.log({ boxPrice: box.boxPrice, prices: tokenPrices });
+              writeContract({
+                address: box.address as `0x${string}`,
+                abi: DegenBoxABI,
+                functionName: 'buyBox',
+                args: [BigInt(amount), BigInt(box.boxPrice), tokenPrices],
+              });
+            }}
+          >
+            <span>Buy {amount} Box </span>
+            <span className="text-primary-100 text-sm">
+              ${formatCurrency(Number(box.formattedBoxPrice) * amount)}
+            </span>
+          </Button>
+        )}
+        <Button
+          className="mt-8 px-4 w-11"
+          variant={'outline'}
+          size={'lg'}
+          onClick={() => setAmount(amount + 1)}
+        >
           <span className="text-primary-700 text-xl">+</span>
         </Button>
       </div>

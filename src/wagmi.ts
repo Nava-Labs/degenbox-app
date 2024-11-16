@@ -7,7 +7,7 @@ import {
 } from '@rainbow-me/rainbowkit/wallets';
 import { useMemo } from 'react';
 import { http, createConfig } from 'wagmi';
-import { base, baseSepolia } from 'wagmi/chains';
+import { base } from 'wagmi/chains';
 import { NEXT_PUBLIC_WC_PROJECT_ID } from './config';
 
 export function useWagmiConfig() {
@@ -37,14 +37,13 @@ export function useWagmiConfig() {
     );
 
     const wagmiConfig = createConfig({
-      chains: [base, baseSepolia],
+      chains: [base],
       // turn off injected provider discovery
       multiInjectedProviderDiscovery: false,
       connectors,
       ssr: true,
       transports: {
         [base.id]: http(),
-        [baseSepolia.id]: http(),
       },
     });
 
