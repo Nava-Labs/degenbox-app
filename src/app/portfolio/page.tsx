@@ -1,13 +1,14 @@
 "use client";
 
 import { StickyBottomNavbar } from "@/components/sticky-bottom-navbar";
+import { TradingCard } from "@/components/trading-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { useAccount } from "wagmi";
 
-export default function Profile() {
+export default function Portfolio() {
   const { address } = useAccount();
 
   return (
@@ -56,6 +57,8 @@ export default function Profile() {
           <Plus className="h-2 w-2" />
         </Button>
       </div>
+
+      <TradingCard />
 
       <StickyBottomNavbar />
     </div>
