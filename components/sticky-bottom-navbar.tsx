@@ -25,7 +25,7 @@ export function StickyBottomNavbar() {
             className="h-8 w-8 text-primary-300 hover:text-primary-600"
           />
           <span className="text-primary-300 hover:text-primary-600 font-bold text-xs">
-            Profile
+            Portfolio
           </span>
         </Link>
       </div>

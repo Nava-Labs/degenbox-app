@@ -24,9 +24,6 @@ export default function Portfolio() {
             </Avatar>
 
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-primary-800">
-                navalabs.base.eth
-              </span>
               <span className="text-xs font-bold text-primary-800 truncate max-w-32">
                 {address}
               </span>

@@ -1,17 +1,24 @@
-'use client';
+"use client";
 
-import { StickyBottomNavbar } from '@/components/sticky-bottom-navbar';
-import { useAccount } from 'wagmi';
-import { useQuery } from '@tanstack/react-query';
-import Onboarding from '../components/Onboarding';
-import BoxIcon from '@/public/icons/box.svg';
-import { Button } from '@/components/ui/button';
-import axios from 'axios';
-import TopUpButton from '../components/TopUpButton';
-import { formatEther } from 'ethers';
-import { truncateAddress } from '../lib/utiles';
-import Loading from '@/public/loading.svg';
-import RainbowHeader from '@/public/rainbow-header.svg';
+import { StickyBottomNavbar } from "@/components/sticky-bottom-navbar";
+import { useAccount } from "wagmi";
+import { useQuery } from "@tanstack/react-query";
+import Onboarding from "../components/Onboarding";
+import BoxIcon from "@/public/icons/box.svg";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
+import TopUpButton from "../components/TopUpButton";
+import { formatEther } from "ethers";
+import { truncateAddress } from "../lib/utiles";
+import Loading from "@/public/loading.svg";
+import RainbowHeader from "@/public/rainbow-header.svg";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import { useState } from "react";
+import { TransactionModal } from "../components/TransactionModal";
 
 // Type definition for Box
 type Box = {
@@ -43,15 +50,17 @@ type CctpDomainMap = {
 
 export default function Page() {
   const { address } = useAccount();
+  const [currentIndex, setCurrentIndex] = useState<any>();
+  console.log("currentIndex", currentIndex);
 
   const {
     data: boxes,
     isLoading,
     error,
   } = useQuery<Box[]>({
-    queryKey: ['boxes'],
+    queryKey: ["boxes"],
     queryFn: async () => {
-      const response = await axios.get('/api/boxes/');
+      const response = await axios.get("/api/boxes/");
       return response.data.boxes;
     },
   });
@@ -74,13 +83,36 @@ export default function Page() {
         <>
           <Heading />
           <div className="px-6 w-full min-h-full pt-8 pb-20 bg-white">
-            <div className="flex space-x-2.5 mb-2">
-              <div className="w-full rounded-full h-1.5 bg-primary-300" />
-              <div className="w-full rounded-full h-1.5 bg-primary-300 opacity-25" />
-              <div className="w-full rounded-full h-1.5 bg-primary-300 opacity-25" />
-            </div>
             {!boxes && <li>No Boxes Found</li>}
-            {!!boxes && <BoxList box={boxes[0]} tokens={boxes[0].token_list} />}
+            {!!boxes && (
+              <>
+                <div className="flex space-x-2.5 mb-2">
+                  {/* {boxes.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`w-full rounded-full h-1.5 bg-primary-300 transition-opacity duration-300 ${
+                        index === currentIndex ? "" : "opacity-25"
+                      }`}
+                    />
+                  ))} */}
+                </div>
+                <Carousel opts={{ loop: true }}>
+                  <CarouselContent>
+                    {boxes.map((box, index) => (
+                      <CarouselItem
+                        key={box.id}
+                        onSelect={(index) => {
+                          console.log(index);
+                          setCurrentIndex(index);
+                        }}
+                      >
+                        <BoxList box={box} tokens={box.token_list} />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
+              </>
+            )}
           </div>
           <StickyBottomNavbar />
         </>
@@ -99,7 +131,7 @@ function Heading() {
 
       <div className="absolute top-[10%] left-0 right-0 flex flex-col items-center w-full">
         <div className="flex px-3 py-0.5 items-center justify-center rounded-full text-xs font-black bg-[#C2E6F5] border border-b-4 border-l-2 border-r-2 border-primary-900 text-center text-primary-900 shadow-sm">
-          Welcome, navalabs.base.eth 👋🏼
+          Welcome 👋🏼
         </div>
 
         <div className="flex px-3 py-0.5 font-bold items-center justify-center rounded-full text-[10px] bg-[#C2E6F5] border-2 border-primary-900 text-center text-primary-900">
@@ -140,9 +172,9 @@ function Heading() {
 
 function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
   const cctpDomainMap: CctpDomainMap = {
-    0: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
-    5: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
-    6: 'https://s2.coinmarketcap.com/static/img/coins/64x64/27716.png',
+    0: "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png",
+    5: "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
+    6: "https://s2.coinmarketcap.com/static/img/coins/64x64/27716.png",
   };
 
   return (
@@ -217,16 +249,20 @@ function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
         ))}
       </ul>
       <div className="flex space-x-2 border-box">
-        <Button className="mt-8 px-4 !w-11" variant={'outline'} size={'lg'}>
+        <Button className="mt-8 px-4 !w-11" variant={"outline"} size={"lg"}>
           <span className="text-primary-700 text-xl">-</span>
         </Button>
-        <Button className="mt-8 w-fit border-b-4 h-11 w-full" size={'lg'}>
+        <Button className="mt-8 w-fit border-b-4 h-11 w-full" size={"lg"}>
           Buy 1 Box <span className="text-primary-100">$1.2</span>
         </Button>
-        <Button className="mt-8 px-4 w-11" variant={'outline'} size={'lg'}>
+        <Button className="mt-8 px-4 w-11" variant={"outline"} size={"lg"}>
           <span className="text-primary-700 text-xl">+</span>
         </Button>
       </div>
+
+      {/* {!!txHash && (
+         <TransactionModal txHash={txHash}/>
+      )} */}
     </div>
   );
 }
