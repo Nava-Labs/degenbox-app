@@ -23,6 +23,14 @@ async function callSwapAndSend(message: string, attestation: string) {
   return await tx.wait();
 }
 
+// Add this interface at the top of the file
+interface TransactionRequest {
+  tx_hash: string;
+  domain_id: number;
+  status: string;
+  // Add any other optional fields here
+}
+
 // GET all transaction statuses
 export async function GET() {
   try {
@@ -37,7 +45,7 @@ export async function GET() {
     const updatePromises = data.map(async (transaction) => {
       try {
         const response = await fetch(
-          `https://iris-api.circle.com/messages/6/${transaction.tx_hash}`
+          `https://iris-api.circle.com/messages/${transaction.domain_id}/${transaction.tx_hash}`
         );
         const attestationData = await response.json();
         
@@ -89,14 +97,45 @@ export async function GET() {
 // POST new transaction status
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
+    const body = await request.json();
+    
+    // Validate required fields
+    if (!body.tx_hash || !body.domain_id) {
+      return NextResponse.json(
+        { error: 'tx_hash and domain_id are required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate tx_hash format (should be a hex string starting with 0x)
+    if (!/^0x[a-fA-F0-9]+$/.test(body.tx_hash)) {
+      return NextResponse.json(
+        { error: 'Invalid tx_hash format' },
+        { status: 400 }
+      );
+    }
+
+    // Validate domain_id is a number
+    if (typeof body.domain_id !== 'number') {
+      return NextResponse.json(
+        { error: 'domain_id must be a number' },
+        { status: 400 }
+      );
+    }
+
+    const transaction: TransactionRequest = {
+      tx_hash: body.tx_hash,
+      domain_id: body.domain_id,
+      status: 'pending' // Set default status
+    };
+
     const { data, error } = await supabase
       .from('transaction_statuses')
-      .insert(body)
-      .select()
+      .insert(transaction)
+      .select();
 
-    if (error) throw error
-    return NextResponse.json(data)
+    if (error) throw error;
+    return NextResponse.json(data);
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
