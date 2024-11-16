@@ -26,11 +26,11 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Onchain App Template",
-  description: "Built with OnchainKit",
+  title: "DegenBox",
+  description: "Built on ETHBangkok 2024",
   openGraph: {
-    title: "Onchain App Template",
-    description: "Built with OnchainKit",
+    title: "DegenBox",
+    description: "DegenBox built on ETHBangkok 2024",
     images: [`${NEXT_PUBLIC_URL}/vibes/vibes-19.png`],
   },
 };
@@ -42,7 +42,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={nunito.className}>
-      <body className="flex items-center justify-center">
+      <body>
         <OnchainProviders>{children}</OnchainProviders>
       </body>
     </html>
