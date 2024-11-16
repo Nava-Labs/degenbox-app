@@ -79,7 +79,7 @@
 }
 
 .h4-shadow {
-  color: hsl(var(--primary-200));
+  color: hsl(var(--primary-100));
   text-shadow:
     -1px -1px 0 hsl(var(--primary-600)),
     1px -1px 0 hsl(var(--primary-600)),

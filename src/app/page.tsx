@@ -160,21 +160,21 @@ function Heading() {
       <RainbowHeader className="w-full" />
 
       <div className="absolute top-[10%] left-0 right-0 flex flex-col items-center w-full">
-        <div className="flex px-3 py-0.5 items-center justify-center rounded-full text-xs font-black bg-[#C2E6F5] border border-b-4 border-l-2 border-r-2 border-primary-900 text-center text-primary-900 shadow-sm">
+        <div className="flex z-10 px-3 py-0.5 items-center justify-center rounded-full text-xs font-black bg-[#C2E6F5] border border-b-4 border-l-2 border-r-2 border-primary-900 text-center text-primary-900 shadow-sm">
           Welcome 👋🏼
         </div>
 
-        <div className="flex px-3 py-0.5 font-bold items-center justify-center rounded-full text-[10px] bg-[#C2E6F5] border-2 border-primary-900 text-center text-primary-900">
-          <Identity>
-            <Name />
+        <div className="flex px-0 -mt-1.5 font-bold items-center justify-center rounded-full text-[10px] bg-[#C2E6F5] border-2 border-primary-900 text-center text-primary-900">
+          <Identity address={address} className="bg-transparent">
+            <Name className="text-xs" />
           </Identity>
         </div>
 
         <div className="flex flex-col space-y-1 items-center justify-center px-4 mt-2 leading-none w-28">
-          <h1 className="font-black text-center text-4xl h4-shadow text-primary-200 leading-none">
+          <h1 className="font-black text-center text-4xl h4-shadow leading-none">
             Discover
           </h1>
-          <h1 className="font-black text-center text-4xl h4-shadow text-primary-200 leading-none">
+          <h1 className="font-black text-center text-4xl h4-shadow leading-none">
             Boxes
           </h1>
         </div>
