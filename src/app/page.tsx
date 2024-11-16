@@ -16,7 +16,7 @@ export default function Page() {
       ) : (
         <>
           <Heading />
-          <div className="px-6 w-full min-h-full py-4 mt-8">
+          <div className="px-6 w-full min-h-full pt-12 bg-white">
             <div className="flex space-x-2.5 mb-4">
               <div className="w-full rounded-full h-2 bg-primary-300" />
               <div className="w-full rounded-full h-2 bg-primary-300 opacity-25" />
@@ -34,10 +34,10 @@ export default function Page() {
 function Heading() {
   const { address } = useAccount();
   return (
-    <div className="w-full relative">
+    <div className="w-full relative mb-12">
       <img src="/rainbow-header.svg" className="w-full" alt="Rainbow header" />
 
-      <div className="absolute top-0 left-0 right-0 flex flex-col items-center w-full pt-8">
+      <div className="absolute top-[10%] left-0 right-0 flex flex-col items-center w-full">
         <div className="flex px-3 py-0.5 items-center justify-center rounded-full text-xs font-black bg-[#C2E6F5] border border-b-4 border-l-2 border-r-2 border-primary-900 text-center text-primary-900 shadow-sm">
           Welcome, navalabs.base.eth 👋🏼
         </div>
@@ -70,7 +70,7 @@ function Heading() {
               </span>
             </div>
 
-            <div className="flex py-1 px-2.5 items-center justify-center rounded-full text-md font-medium bg-primary-400 text-center text-white">
+            <div className="flex py-1 px-2.5 items-center justify-center rounded-full text-md shadow-lg font-medium bg-primary-400 text-center text-white">
               <div className="flex justify-center gap-4">
                 <div className="flex items-center gap-1">
                   <span className="font-bold text-sm">Top Up</span>
@@ -141,10 +141,10 @@ function BoxList() {
   };
 
   return (
-    <div className="relative w-full !h-[58vh] border border-primary-100 rounded-lg px-3 py-2.5">
+    <div className="relative w-full border border-primary-100 rounded-lg px-3 py-2.5">
       {/* Card Header */}
       <div className="w-full flex justify-between items-start">
-        <div className="flex flex-col items-start">
+        <div className="flex items-start gap-2">
           <div className="bg-primary-200 size-12 flex items-center justify-center rounded-lg overflow-hidden">
             <BoxIcon
               src="/icons/box.svg"
@@ -152,10 +152,12 @@ function BoxList() {
               alt="Box icon"
             />
           </div>
-          <h1 className="text-primary-800 text-lg font-bold mt-2">Boxes</h1>
-          <p className="text-primary-300 text-sm font-bold">
-            1000+ Purchased Boxes
-          </p>
+          <div>
+            <h1 className="text-primary-800 text-lg font-bold">Boxes</h1>
+            <p className="text-primary-300 text-sm font-bold">
+              1000+ Purchased Boxes
+            </p>
+          </div>
         </div>
         <div className="text-right">
           <h1 className="text-primary-800 text-lg font-bold leading-none">
@@ -182,7 +184,7 @@ function BoxList() {
                 />
               </div>
               <div>
-                <p className="text-primary-700 font-bold text-lg leading-none">
+                <p className="text-primary-700 font-bold leading-none">
                   {item.name}
                 </p>
                 <p className="text-primary-400 font-bold text-xs mt-1 leading-none">
@@ -191,7 +193,7 @@ function BoxList() {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-primary-700 font-bold text-lg leading-none">
+              <p className="text-primary-700 font-bold leading-none">
                 {item.percentage}%
               </p>
               <p className="text-primary-400 font-bold text-xs mt-1 leading-none">
@@ -201,7 +203,7 @@ function BoxList() {
           </li>
         ))}
       </ul>
-      <div className="absolute bottom-2.5 inset-x-0 flex justify-center space-x-2 px-3">
+      <div className="flex justify-center space-x-2">
         <Button className="mt-8 font-black h-11 w-11 bg-white border-b-4">
           <span className="text-primary-700 text-xl">-</span>
         </Button>
