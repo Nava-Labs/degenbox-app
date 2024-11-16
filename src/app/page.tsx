@@ -1,29 +1,30 @@
-'use client';
+"use client";
 
-import { StickyBottomNavbar } from '@/components/sticky-bottom-navbar';
-import { useAccount, useReadContract, useWriteContract } from 'wagmi';
-import { useQuery } from '@tanstack/react-query';
-import Onboarding from '../components/Onboarding';
-import BoxIcon from '@/public/icons/box.svg';
-import { Button } from '@/components/ui/button';
-import axios from 'axios';
-import TopUpButton from '../components/TopUpButton';
-import { formatEther } from 'ethers';
-import { cn, formatCurrency, truncateAddress } from '../lib/utiles';
-import Loading from '@/public/loading.svg';
-import RainbowHeader from '@/public/rainbow-header.svg';
+import { StickyBottomNavbar } from "@/components/sticky-bottom-navbar";
+import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import { useQuery } from "@tanstack/react-query";
+import Onboarding from "../components/Onboarding";
+import BoxIcon from "@/public/icons/box.svg";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
+import TopUpButton from "../components/TopUpButton";
+import { formatEther } from "ethers";
+import { cn, formatCurrency, truncateAddress } from "../lib/utiles";
+import Loading from "@/public/loading.svg";
+import RainbowHeader from "@/public/rainbow-header.svg";
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
-} from '@/components/ui/carousel';
-import { useMemo, useState } from 'react';
-import { TransactionModal } from '../components/TransactionModal';
-import { USDC_ABI } from '../lib/abi/usdc.abi';
-import { formatUnits } from 'viem';
-import { DegenBoxABI } from '../lib/abi/degen-box.abi';
-import React from 'react';
+} from "@/components/ui/carousel";
+import { useMemo, useState } from "react";
+import { TransactionModal } from "../components/TransactionModal";
+import { USDC_ABI } from "../lib/abi/usdc.abi";
+import { formatUnits } from "viem";
+import { DegenBoxABI } from "../lib/abi/degen-box.abi";
+import React from "react";
+import { useBalance } from "wagmi";
 
 // Type definition for Box
 type Box = {
@@ -63,9 +64,9 @@ export default function Page() {
     isLoading,
     error,
   } = useQuery<Box[]>({
-    queryKey: ['boxes'],
+    queryKey: ["boxes"],
     queryFn: async () => {
-      const response = await axios.get('/api/boxes/');
+      const response = await axios.get("/api/boxes/");
       return response.data.boxes;
     },
   });
@@ -81,7 +82,7 @@ export default function Page() {
     setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
 
-    api.on('select', () => {
+    api.on("select", () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
   }, [api]);
@@ -114,8 +115,8 @@ export default function Page() {
                       <div
                         key={_}
                         className={cn(
-                          'w-full rounded-full h-1.5 bg-primary-500 transition-opacity duration-300',
-                          index === current - 1 ? 'opacity-100' : 'opacity-25',
+                          "w-full rounded-full h-1.5 bg-primary-500 transition-opacity duration-300",
+                          index === current - 1 ? "opacity-100" : "opacity-25",
                         )}
                       />
                     ))}
@@ -149,6 +150,10 @@ export default function Page() {
 
 function Heading() {
   const { address } = useAccount();
+  const { data: usdcBalance } = useBalance({
+    address: address,
+    token: USDC_ADDRESS,
+  });
   return (
     <div className="w-full relative">
       <RainbowHeader className="w-full" />
@@ -182,7 +187,7 @@ function Heading() {
                 alt="Dollar icon"
               />
               <span className="text-primary-700 font-bold text-sm">
-                199 USDC
+                {usdcBalance?.formatted as string} USDC
               </span>
             </div>
 
@@ -194,14 +199,14 @@ function Heading() {
   );
 }
 
-const USDC_ADDRESS = '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913';
+const USDC_ADDRESS = "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913";
 function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
   const [amount, setAmount] = useState<number>(1);
   const { address } = useAccount();
   const { data: allowance } = useReadContract({
     address: USDC_ADDRESS as `0x${string}`,
     abi: USDC_ABI,
-    functionName: 'allowance',
+    functionName: "allowance",
     args: [address!, box.address as `0x${string}`],
   });
 
@@ -221,9 +226,9 @@ function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
   );
 
   const cctpDomainMap: CctpDomainMap = {
-    0: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
-    5: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
-    6: 'https://s2.coinmarketcap.com/static/img/coins/64x64/27716.png',
+    0: "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png",
+    5: "https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png",
+    6: "https://s2.coinmarketcap.com/static/img/coins/64x64/27716.png",
   };
 
   return (
@@ -300,8 +305,8 @@ function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
       <div className="flex space-x-2 border-box">
         <Button
           className="mt-8 px-4 !w-11"
-          variant={'outline'}
-          size={'lg'}
+          variant={"outline"}
+          size={"lg"}
           onClick={() => setAmount(amount - 1)}
           disabled={amount === 1}
         >
@@ -309,17 +314,17 @@ function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
         </Button>
         {!isApproved && (
           <Button
-            size={'lg'}
+            size={"lg"}
             className="flex justify-center items-center mt-8 w-fit border-b-4 h-11 w-full text-lg"
             onClick={() => {
               writeContract({
                 address: USDC_ADDRESS as `0x${string}`,
                 abi: USDC_ABI,
-                functionName: 'approve',
+                functionName: "approve",
                 args: [
                   box.address as `0x${string}`,
                   BigInt(
-                    '115792089237316195423570985008687907853269984665640564039457584007913129639935',
+                    "115792089237316195423570985008687907853269984665640564039457584007913129639935",
                   ),
                 ],
               });
@@ -330,14 +335,14 @@ function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
         )}
         {!!isApproved && (
           <Button
-            size={'lg'}
+            size={"lg"}
             className="flex justify-center items-center mt-8 w-fit border-b-4 h-11 w-full text-lg"
             onClick={() => {
               console.log({ boxPrice: box.boxPrice, prices: tokenPrices });
               writeContract({
                 address: box.address as `0x${string}`,
                 abi: DegenBoxABI,
-                functionName: 'buyBox',
+                functionName: "buyBox",
                 args: [BigInt(amount), BigInt(box.boxPrice), tokenPrices],
               });
             }}
@@ -350,8 +355,8 @@ function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
         )}
         <Button
           className="mt-8 px-4 w-11"
-          variant={'outline'}
-          size={'lg'}
+          variant={"outline"}
+          size={"lg"}
           onClick={() => setAmount(amount + 1)}
         >
           <span className="text-primary-700 text-xl">+</span>
