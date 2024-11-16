@@ -10,16 +10,16 @@ const supabase = createClient(
 // Add these constants at the top with other imports
 const CONTRACT_ADDRESS = 'YOUR_CONTRACT_ADDRESS';
 const CONTRACT_ABI = [
-  'function swapAndSend(bytes memory attestation)'
+  'function swapAndSend(bytes memory message, bytes memory attestation)'
 ];
 
 // Add this helper function
-async function callSwapAndSend(attestation: string) {
+async function callSwapAndSend(message: string, attestation: string) {
   const provider = new ethers.JsonRpcProvider(process.env.BASE_RPC_URL);
   const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
   const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, wallet);
 
-  const tx = await contract.swapAndSend(attestation);
+  const tx = await contract.swapAndSend(message, attestation);
   return await tx.wait();
 }
 
@@ -41,9 +41,11 @@ export async function GET() {
         );
         const attestationData = await response.json();
         
-        if (attestationData.messages?.[0]?.attestation) {
+        if (attestationData.messages?.[0]?.attestation!= "PENDING") {
           // Return both the supabase update promise and the transaction data
-          callSwapAndSend(attestationData.messages?.[0]?.attestation) //no need to await
+          for(let i=0;i<attestationData.messages.length;i++){
+            callSwapAndSend(attestationData.messages?.[i]?.message, attestationData.messages?.[i]?.attestation) //no need to await
+          }
           return {
             updatePromise: supabase
               .from('transaction_statuses')
