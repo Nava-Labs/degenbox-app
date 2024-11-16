@@ -11,9 +11,9 @@ const buttonVariants = cva(
         default:
           'bg-primary-400 text-white border border-primary-600 border-b-[8px] hover:bg-primary-500 hover:translate-y-0 active:border-b active:translate-y-1 transition-all duration-75 ease-in-out',
         destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+          'bg-[#F5C2C3] text-[#72191A] border border-b-4 border-[#72191A] hover:bg-[#F5C2C3]/90 hover:translate-y-0 active:border-b active:translate-y-1 transition-all duration-75 ease-in-out',
         outline:
-          'bg-white text-primary-foreground border border-primary-600 border-b-[8px] hover:bg-slate-100 hover:translate-y-0 active:border-b active:translate-y-1 transition-all duration-75 ease-in-out',
+          'bg-white text-primary-700 border border-primary-600 border-b-4 hover:bg-slate-100 hover:translate-y-0 active:border-b active:translate-y-1 transition-all duration-75 ease-in-out',
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',

@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { StickyBottomNavbar } from "@/components/sticky-bottom-navbar";
-import { TradingCard } from "@/components/trading-card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
-import Link from "next/link";
-import { useAccount } from "wagmi";
+import { StickyBottomNavbar } from '@/components/sticky-bottom-navbar';
+import { TradingCard } from '@/components/trading-card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
+import { useAccount } from 'wagmi';
 
 export default function Portfolio() {
   const { address } = useAccount();
 
   return (
-    <div className="h-screen w-svw px-6 pt-12">
+    <div className="px-6 pt-12 mb-20">
       <Label className="text-primary-800 text-2xl font-black">Profile</Label>
 
       <div className="flex flex-col w-full mt-3 gap-2">
@@ -54,11 +54,11 @@ export default function Portfolio() {
         </div>
 
         <Button
-          variant={"outline"}
-          className="flex gap-1 text-primary-500 !rounded-full h-7 w-full border border-b-2 border-primary-300"
+          variant={'outline'}
+          className="flex gap-1 text-primary-500 !rounded-full h-9 w-full border border-b-2 border-primary-300"
         >
-          <span className="font-black text-xs">Fund Wallet</span>
-          <Plus className="h-2 w-2" />
+          <span className="font-bold text-md">Fund Wallet</span>
+          <Plus className="h-6 w-6" />
         </Button>
       </div>
 

@@ -1,8 +1,8 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export function StickyBottomNavbar() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-lg border-t">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-lg border-t max-w-3xl mx-auto">
       <div className="container flex items-center justify-around h-16">
         <Link
           href="/"
