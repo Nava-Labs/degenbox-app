@@ -29,11 +29,7 @@ export default function WalletWrapper({
   return (
     <>
       <Wallet className="w-full bg-transparent hover:translate-y-0 active:translate-y-1 transition-all duration-75 ease-in-out text-xl">
-        <ConnectWallet
-          withWalletAggregator={withWalletAggregator}
-          text={text}
-          className={className}
-        >
+        <ConnectWallet text={text} className={className}>
           <Avatar className="h-6 w-6" />
           <Name />
         </ConnectWallet>
