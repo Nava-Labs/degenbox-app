@@ -1,15 +1,20 @@
 "use client";
 
 import { FundButton, getOnrampBuyUrl } from "@coinbase/onchainkit/fund";
+import { Button } from '@/components/ui/button';
+
 import { useAccount } from "wagmi";
+import { useAbstraxionAccount } from "@burnt-labs/abstraxion";
 
 export default function TopUpButton() {
   const projectId = "16a735ec-e40f-491e-9d1d-c295b2a03138";
-  const { address } = useAccount();
+  // const { address } = useAccount();
+  const { data: { bech32Address }, isConnected, isConnecting } = useAbstraxionAccount();
+
 
   const onrampBuyUrl = getOnrampBuyUrl({
     projectId,
-    addresses: { [address as string]: ["base"] },
+    addresses: { [bech32Address as string]: ["xion"] },
     assets: ["USDC"],
     presetFiatAmount: 20,
     fiatCurrency: "USD",

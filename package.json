@@ -17,14 +17,18 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@coinbase/onchainkit": "^0.33.6",
+    "@burnt-labs/abstraxion": "1.0.0-alpha.55",
+    "@burnt-labs/ui": "0.1.0-alpha.15",
+    "@pythnetwork/price-service-client": "^1.9.0",
     "@pythnetwork/pyth-evm-js": "^1.76.0",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@supabase/supabase-js": "^2.46.1",
+    "@tanstack/react-query": "^5.64.1",
     "@trigger.dev/sdk": "^3.2.0",
+    "axios": "^1.7.9",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.3.1",
@@ -37,7 +41,9 @@
     "siwe": "^2.3.2",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
-    "vaul": "^1.1.1"
+    "vaul": "^1.1.1",
+    "viem": "^2.22.9",
+    "wagmi": "^2.14.8"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.0",

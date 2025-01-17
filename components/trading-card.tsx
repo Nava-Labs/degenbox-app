@@ -6,19 +6,9 @@ import CopyIcon from '@/public/icons/copy.svg';
 
 const BOX_DATA = [
   {
-    name: 'Base Maxi',
-    box_balance: 2,
-    box_address: '0x27c229FE370C1195c45ff1953e96acd741aA48c0',
-    box_logo_url:
-      'https://raw.githubusercontent.com/base-org/brand-kit/10f77e1f8f27e719c181973384f4cc967d9c4d36/logo/symbol/Base_Symbol_Blue.svg',
-    box_price: 0.0087,
-    box_balance_in_usd: 0.0174,
-    average_entry: 0.015,
-  },
-  {
     name: "Murad's Big Bet",
     box_balance: 5,
-    box_address: '0x4838B106FCe9647Bdf1E7877BF73cE8B0BAD5f97',
+    box_address: 'xion1d5n809spzdg73vgc6c7gq9zkk87c5xunqe6yla',
     box_logo_url: 'https://twitter.com/MustStopMurad/photo',
     box_price: 0.01,
     box_balance_in_usd: 0.05,
@@ -27,7 +17,7 @@ const BOX_DATA = [
   {
     name: 'The Big 5',
     box_balance: 3,
-    box_address: '0x253553366Da8546fC250F225fe3d25d0C782303b',
+    box_address: 'xion10nt859yvg2hhc687u440r98c64m8pmnv0wsg9w',
     box_logo_url:
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROjfDTghEmMns99jBtOkpQrfBN19Xfw4W2Kg&s',
     box_price: 0.05,

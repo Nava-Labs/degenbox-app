@@ -25,7 +25,13 @@ import { formatUnits } from 'viem';
 import { DegenBoxABI } from '../lib/abi/degen-box.abi';
 import React from 'react';
 import { useBalance } from 'wagmi';
-import { Identity, Name } from '@coinbase/onchainkit/identity';
+// import { Identity, Name } from '@coinbase/onchainkit/identity';
+
+import {
+  Abstraxion,
+  useAbstraxionAccount,
+  useModal
+} from "@burnt-labs/abstraxion";
 
 // Type definition for Box
 type Box = {
@@ -55,8 +61,14 @@ type CctpDomainMap = {
   [key: number]: string;
 };
 
+// import { Button } from "@burnt-labs/ui";
+
+
 export default function Page() {
-  const { address } = useAccount();
+  // const { address } = useAccount();
+  // const address = "0x2d7e2DF65C1B06fa60FAf2a7D4C260738BB553D9"
+  const { data:  { bech32Address } , isConnected, isConnecting } = useAbstraxionAccount();
+  console.log("addresssss ", bech32Address)
 
   const [api, setApi] = React.useState<CarouselApi>();
 
@@ -97,12 +109,13 @@ export default function Page() {
   }
 
   if (error) {
+    console.log("what is error ", error)
     return <div>Error fetching boxes</div>;
   }
 
   return (
     <div>
-      {address ? (
+      {bech32Address ? (
         <>
           <Heading />
           <div className="px-6 w-full min-h-full pt-8 pb-20 bg-white">
@@ -142,7 +155,9 @@ export default function Page() {
           </div>
           <StickyBottomNavbar />
         </>
-      ) : (
+      ) 
+      
+      : (
         <Onboarding />
       )}
     </div>
@@ -150,11 +165,14 @@ export default function Page() {
 }
 
 function Heading() {
-  const { address } = useAccount();
-  const { data: usdcBalance } = useBalance({
-    address: address,
+  // const { address } = useAccount();
+  const { data: { bech32Address }} = useAbstraxionAccount();
+
+  let { data: usdcBalance } = useBalance({
+    address: "0x2d7e2DF65C1B06fa60FAf2a7D4C260738BB553D9",
     token: USDC_ADDRESS,
   });
+  // usdcBalance = 0;
   return (
     <div className="w-full relative">
       <RainbowHeader className="w-full" />
@@ -165,9 +183,10 @@ function Heading() {
         </div>
 
         <div className="flex px-0 -mt-1.5 font-bold items-center justify-center rounded-full text-[10px] bg-[#C2E6F5] border-2 border-primary-900 text-center text-primary-900">
-          <Identity address={address} className="bg-transparent">
+          {/* <Identity address={address} className="bg-transparent">
             <Name className="text-xs" />
-          </Identity>
+          </Identity> */}
+          {bech32Address}
         </div>
 
         <div className="flex flex-col space-y-1 items-center justify-center px-4 mt-2 leading-none w-28">
@@ -190,7 +209,7 @@ function Heading() {
                 alt="Dollar icon"
               />
               <span className="text-primary-700 font-bold text-sm">
-                {usdcBalance?.formatted as string} USDC
+                0 USDC
               </span>
             </div>
 
@@ -206,20 +225,26 @@ const USDC_ADDRESS = '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913';
 function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
   const [amount, setAmount] = useState<number>(1);
   const { address } = useAccount();
-  const { data: allowance } = useReadContract({
-    address: USDC_ADDRESS as `0x${string}`,
-    abi: USDC_ABI,
-    functionName: 'allowance',
-    // biome-ignore lint/style/noNonNullAssertion: this is the simplest way
-    args: [address!, box.address as `0x${string}`],
-  });
+
+  const [showModal, setShowModal] = useModal();
+  console.log("showModal:", showModal, "setShowModal:", setShowModal, useModal);
+  const { data: { bech32Address }, isConnected, isConnecting } = useAbstraxionAccount();
+  console.log("bechh ", bech32Address)
+
+  // const { data: allowance } = useReadContract({
+  //   address: USDC_ADDRESS as `0x${string}`,
+  //   abi: USDC_ABI,
+  //   functionName: 'allowance',
+  //   // biome-ignore lint/style/noNonNullAssertion: this is the simplest way
+  //   args: [address!, box.address as `0x${string}`],
+  // });
 
   const { data: hash, isPending, writeContract } = useWriteContract();
 
-  const isApproved = useMemo(() => {
-    const formattedAllowance = formatUnits(allowance ?? BigInt(0), 6);
-    return +formattedAllowance >= +amount;
-  }, [amount, allowance]);
+  // const isApproved = useMemo(() => {
+  //   const formattedAllowance = formatUnits(allowance ?? BigInt(0), 6);
+  //   return +formattedAllowance >= +amount;
+  // }, [amount, allowance]);
 
   const tokenPrices = useMemo(
     () =>
@@ -307,6 +332,7 @@ function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
         ))}
       </ul>
       <div className="flex space-x-2 border-box">
+
         <Button
           className="mt-8 px-4 !w-11"
           variant={'outline'}
@@ -316,7 +342,7 @@ function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
         >
           <span className="text-primary-700 text-xl">-</span>
         </Button>
-        {!isApproved && (
+        {/* {!isApproved && (
           <Button
             size={'lg'}
             className="flex justify-center items-center mt-8 w-fit border-b-4 h-11 w-full text-lg"
@@ -334,10 +360,10 @@ function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
               });
             }}
           >
-            {isPending ? <span>Approving...</span> : <span>Approve USDC</span>}
+            {isPending ? <span>Approving...</span> : <span>Buy Box</span>}
           </Button>
         )}
-        {!!isApproved && (
+        {!!isApproved && ( */}
           <Button
             size={'lg'}
             className="flex justify-center items-center mt-8 w-fit border-b-4 h-11 w-full text-lg"
@@ -356,7 +382,7 @@ function BoxList({ box, tokens }: { box: Box; tokens: Token[] }) {
               ${formatCurrency(Number(box.formattedBoxPrice) * amount)}
             </span>
           </Button>
-        )}
+        {/* )} */}
         <Button
           className="mt-8 px-4 w-11"
           variant={'outline'}

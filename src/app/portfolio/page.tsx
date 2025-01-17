@@ -5,12 +5,13 @@ import { TradingCard } from '@/components/trading-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { useAbstraxionAccount } from '@burnt-labs/abstraxion';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
-import { useAccount } from 'wagmi';
 
 export default function Portfolio() {
-  const { address } = useAccount();
+  // const { address } = useAccount();
+  const { data: { bech32Address }, isConnected, isConnecting } = useAbstraxionAccount();
 
   return (
     <div className="px-6 pt-12 mb-20">
@@ -26,7 +27,7 @@ export default function Portfolio() {
 
             <div className="flex flex-col">
               <span className="text-xs font-bold text-primary-800 truncate max-w-32">
-                {address}
+                {bech32Address}
               </span>
             </div>
           </div>
@@ -41,7 +42,7 @@ export default function Portfolio() {
             <div className="flex gap-1 items-center">
               <img src="/icons/external-link.svg" className="h-4 w-4" />
               <Link
-                href={`https://base.blockscout.com/address/${address}`}
+                href={`https://explorer.burnt.com/xion-testnet-1/account/${bech32Address}`}
                 target="_blank"
                 rel="noreferrer"
               >
