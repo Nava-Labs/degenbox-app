@@ -32,17 +32,6 @@ const OnchainProviders = dynamic(
 //   initialScale: 1.0,
 // };
 
-// export const metadata: Metadata = {
-//   title: 'DegenBox',
-//   description: 'Built on ETHBangkok 2024',
-//   openGraph: {
-//     title: 'DegenBox',
-//     description: 'DegenBox built on ETHBangkok 2024',
-//     images: [`${NEXT_PUBLIC_URL}/vibes/vibes-19.png`],
-//   },
-// };
-
-
 // Example XION seat contract
 const seatContractAddress =
   "xion1z70cvc08qv5764zeg3dykcyymj5z6nu4sqr7x8vl4zjef2gyp69s9mmdka";
@@ -86,6 +75,9 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={nunito.className}>
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className="max-w-md mx-auto">
         {/* <OnchainProviders>{children}</OnchainProviders> */}
         <WagmiProvider config={wagmiConfig}>
