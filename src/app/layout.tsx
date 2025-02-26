@@ -76,7 +76,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={nunito.className}>
       <head>
+        <title>DegenBox</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta name="description" content="Buy memecoins from multiple chains through Memecoins Index" />
       </head>
       <body className="max-w-md mx-auto">
         {/* <OnchainProviders>{children}</OnchainProviders> */}
