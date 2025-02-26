@@ -32,6 +32,7 @@ import {
   useAbstraxionAccount,
   useModal
 } from "@burnt-labs/abstraxion";
+import Waitlist from '../components/Waitlist';
 
 // Type definition for Box
 type Box = {
@@ -158,7 +159,8 @@ export default function Page() {
       ) 
       
       : (
-        <Onboarding />
+        // <Onboarding />
+        <Waitlist/>
       )}
     </div>
   );
