@@ -63,7 +63,11 @@ export default function Waitlist() {
       ]).select()
 
     if (error) {
-      setMessage("Error adding email: " + error.message);
+      if (error.message.includes("waitlist_email_key")) {
+        setMessage("This email is already on the waitlist");
+      } else {
+        setMessage("Error adding email: " + error.message);
+      }
     } else {
       setMessage("Email added to waitlist!");
       setEmail("");
