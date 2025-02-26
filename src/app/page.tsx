@@ -116,7 +116,7 @@ export default function Page() {
 
   return (
     <div>
-      {bech32Address ? (
+      {/* {bech32Address ? (
         <>
           <Heading />
           <div className="px-6 w-full min-h-full pt-8 pb-20 bg-white">
@@ -156,12 +156,12 @@ export default function Page() {
           </div>
           <StickyBottomNavbar />
         </>
-      ) 
+      )  */}
       
-      : (
-        // <Onboarding />
+      {/* : ( */}
+        {/* // <Onboarding /> */}
         <Waitlist/>
-      )}
+      {/* )} */}
     </div>
   );
 }
