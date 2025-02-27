@@ -371,7 +371,7 @@ class HeaderPhysics extends React.Component<{}, HeaderPhysicsState> {
     render() {
         return (
             <>
-                <div className="relative overflow-x-hidden"
+                <div className="relative overflow-hidden"
                     style={{
                         height: "320px",
                         width: this.state.bodyWidth
