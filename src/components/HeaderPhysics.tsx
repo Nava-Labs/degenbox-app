@@ -7,7 +7,7 @@ import Logo from "@/public/logo.svg";
 // Constants for physics configuration
 const PHYSICS_CONFIG = {
   density: 0.001,
-  frictionAir: 0.01,
+  frictionAir: 0.02,
   friction: 0.01,
   restitution: 0.7,
   slop: 0.05,
@@ -80,7 +80,7 @@ class HeaderPhysics extends React.Component<{}, HeaderPhysicsState> {
 
   private createInitialBalls = () => {
     const balls = [];
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 32; i++) {
       const x = Math.random() * this.state.bodyWidth;
       const y = Math.random() * -600; // Stagger initial drop heights
 
@@ -153,7 +153,7 @@ class HeaderPhysics extends React.Component<{}, HeaderPhysicsState> {
     // Create initial dropping balls
     const initialBalls = this.createInitialBalls();
     initialBalls.forEach((ball, i) => {
-      setTimeout(() => World.add(this.engine.world, ball), 400 * (i + 1));
+      setTimeout(() => World.add(this.engine.world, ball), 300 * (i + 1));
     });
 
     // Add mouse control
