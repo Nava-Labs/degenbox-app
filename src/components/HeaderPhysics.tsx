@@ -1,391 +1,226 @@
-'use client'
+"use client";
 
-/* eslint-disable react/no-string-refs */
-import React from 'react';
-import Matter from 'matter-js';
-import Logo from '@/public/logo.svg'
+import React from "react";
+import Matter from "matter-js";
+import Logo from "@/public/logo.svg";
+
+// Constants for physics configuration
+const PHYSICS_CONFIG = {
+  density: 0.001,
+  frictionAir: 0.01,
+  friction: 0.01,
+  restitution: 0.7,
+  slop: 0.05,
+} as Matter.IBodyDefinition;
+
+// Available textures and their configurations
+const TEXTURE_CONFIGS = [
+  { texture: "/texture_trump.png", size: 64, scale: 1 },      // 64x64
+  { texture: "/texture_doge.png", size: 64, scale: 1 },       // 64x64
+  { texture: "/texture_spx6900.webp", size: 64, scale: 1 },   // 64x64
+  { texture: "/texture_wif.webp", size: 96, scale: 0.667 },   // 96x96
+  { texture: "/texture_bonk.png", size: 64, scale: 1 },       // 64x64
+  { texture: "/texture_pepe.png", size: 64, scale: 1 },       // 64x64
+  { texture: "/texture_popcat.png", size: 64, scale: 1 },     // 64x64
+  { texture: "/texture_aixbt.webp", size: 80, scale: 0.8 },   // 80x80
+  { texture: "/texture_mog.png", size: 64, scale: 1 }         // 64x64
+] as const;
 
 interface HeaderPhysicsState {
-    bodyWidth: number;
+  bodyWidth: number;
 }
 
 class HeaderPhysics extends React.Component<{}, HeaderPhysicsState> {
-    constructor(props: {}) {
-        super(props);
-        this.state = {
-            bodyWidth: typeof document !== 'undefined' ? document.body.getBoundingClientRect().width : 0
-        };
-    }
-    componentDidMount() {
-        var Engine = Matter.Engine,
-            Render = Matter.Render,
-            World = Matter.World,
-            Bodies = Matter.Bodies,
-            Mouse = Matter.Mouse,
-            width = this.state.bodyWidth,
-            height = 320,
-            MouseConstraint = Matter.MouseConstraint;
+  private engine!: Matter.Engine;
+  private matterRender!: Matter.Render;
+  private runner!: Matter.Runner;
+  private sceneRef: React.RefObject<HTMLDivElement>;
 
-        var engine = Engine.create({
-            // positionIterations: 20
-        });
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      bodyWidth: typeof document !== "undefined" ? document.body.getBoundingClientRect().width : 0,
+    };
+    this.sceneRef = React.createRef();
+  }
 
-        var render = Render.create({
-            element: this.refs.scene as HTMLElement,
-            engine: engine,
-            options: {
-                pixelRatio: 'auto' as any,
-                width: width,
-                height: height,
-                wireframes: false,
-                background: 'transparent',
-                wireframeBackground: 'transparent',
-            },
-        });
-        Render.run(render);
+  // Helper function to create a ball with physics properties
+  private createBall = (x: number, y: number, radius: number, texture: string) => {
+    return Matter.Bodies.circle(x, y, radius, {
+      ...PHYSICS_CONFIG,
+      render: {
+        sprite: { texture, xScale: radius / 30, yScale: radius / 30 }
+      }
+    });
+  }
 
-        let runner = Matter.Runner.create();
-        Matter.Runner.run(runner, engine);
+  // Create a random ball for click events
+  private createRandomBall = () => {
+    const x = Math.random() * this.state.bodyWidth;
+    const y = -30;
 
-        // Add collision event listener
-        Matter.Events.on(engine, 'collisionStart', function (event) {
-            event.pairs.forEach((pair) => {
-                console.log('Collision detected:', {
-                    bodyA: {
-                        position: pair.bodyA.position,
-                        radius: pair.bodyA.circleRadius,
-                        velocity: pair.bodyA.velocity,
-                        render: pair.bodyA.render
-                    },
-                    bodyB: {
-                        position: pair.bodyB.position,
-                        radius: pair.bodyB.circleRadius,
-                        velocity: pair.bodyB.velocity,
-                        render: pair.bodyB.render
-                    }
-                });
-            });
-        });
+    const textureConfig = TEXTURE_CONFIGS[Math.floor(Math.random() * TEXTURE_CONFIGS.length)];
+    // Randomize scale between 0.5 and 1.2 of the base scale
+    const randomScale = textureConfig.scale * (0.5 + Math.random() * 0.7);
+    const radius = (textureConfig.size / 2) * randomScale;
 
-        var ballA = Bodies.circle(170, 50, 30, {
-            density: 0.05,
-            frictionAir: 0.03,
-            friction: 0.05,
-            restitution: 0.3,
-            render: {
-                sprite: {
-                    texture: '/texture_trump.png',
-                    xScale: 0.75,
-                    yScale: 0.75,
-                },
-            },
-        });
-        var ballB = Bodies.circle(200, 50, 25, {
-            density: 0.05,
-            frictionAir: 0.03,
-            friction: 0.05,
-            restitution: 0.3,
-            render: {
-                sprite: {
-                    texture: '/texture_doge.png',
-                    xScale: 0.9,
-                    yScale: 0.9,
-                },
-            },
-        });
-        var ballC = Bodies.circle(460, 50, 35, {
-            density: 0.05,
-            frictionAir: 0.03,
-            friction: 0.05,
-            restitution: 0.3,
-            render: {
-                sprite: {
-                    texture: '/texture_spx6900.webp',
-                    xScale: 0.75,
-                    yScale: 0.75,
-                },
-            },
-        });
-        var ballD = Bodies.circle(270, 50, 20, {
-            density: 0.05,
-            frictionAir: 0.03,
-            friction: 0.05,
-            restitution: 0.3,
-            render: {
-                sprite: {
-                    texture: '/texture_wif.webp',
-                    xScale: 0.6,
-                    yScale: 0.6,
-                },
-            },
-        });
-        var ballE = Bodies.circle(170, 50, 30, {
-            density: 0.05,
-            frictionAir: 0.03,
-            friction: 0.05,
-            restitution: 0.3,
-            render: {
-                sprite: {
-                    texture: '/texture_trump.png',
-                    xScale: 0.75,
-                    yScale: 0.75,
-                },
-            },
-        });
-        var ballF = Bodies.circle(200, 50, 25, {
-            density: 0.05,
-            frictionAir: 0.03,
-            friction: 0.05,
-            restitution: 0.3,
-            render: {
-                sprite: {
-                    texture: '/texture_doge.png',
-                    xScale: 0.9,
-                    yScale: 0.9,
-                },
-            },
-        });
-        var ballG = Bodies.circle(460, 50, 35, {
-            density: 0.05,
-            frictionAir: 0.03,
-            friction: 0.05,
-            restitution: 0.3,
-            render: {
-                sprite: {
-                    texture: '/texture_spx6900.webp',
-                    xScale: 0.75,
-                    yScale: 0.75,
-                },
-            },
-        });
-        var ballH = Bodies.circle(270, 50, 20, {
-            density: 0.05,
-            frictionAir: 0.03,
-            friction: 0.05,
-            restitution: 0.3,
-            render: {
-                sprite: {
-                    texture: '/texture_wif.webp',
-                    xScale: 0.6,
-                    yScale: 0.6,
-                },
-            },
-        });
-        World.add(engine.world, [
-            // walls
-            Bodies.rectangle(-50, 0, 50, height * 3, {
-                isStatic: true,
-                label: 'leftWall',
-            }),
-            Bodies.rectangle(width + 50, 0, 50, height * 3, {
-                isStatic: true,
-                label: 'rightWall',
-            }),
-            Bodies.rectangle(width / 2, height + 30, width, 90, {
-                isStatic: true,
-                label: 'floor',
-                render: {
-                    fillStyle: 'transparent',
-                },
-            }),
-        ]);
-
-        setTimeout(function () {
-            World.add(engine.world, ballA);
-        }, 800);
-        setTimeout(function () {
-            World.add(engine.world, ballB);
-        }, 1600);
-        setTimeout(function () {
-            World.add(engine.world, ballC);
-        }, 2400);
-        setTimeout(function () {
-            World.add(engine.world, ballD);
-        }, 3200);
-        setTimeout(function () {
-            World.add(engine.world, ballE);
-        }, 3600);
-        setTimeout(function () {
-            World.add(engine.world, ballF);
-        }, 4000);
-        setTimeout(function () {
-            World.add(engine.world, ballG);
-        }, 4800);
-        setTimeout(function () {
-            World.add(engine.world, ballH);
-        }, 5600);
-
-        // add mouse control
-        var mouse = Mouse.create(render.canvas),
-            mouseConstraint = MouseConstraint.create(engine, {
-                mouse: mouse,
-                constraint: {
-                    stiffness: 0.2,
-                    render: {
-                        visible: false,
-                    },
-                },
-            });
-
-        mouseConstraint.mouse.element.removeEventListener(
-            'mousewheel',
-            (mouseConstraint.mouse as any).mousewheel,
-        );
-        mouseConstraint.mouse.element.removeEventListener(
-            'DOMMouseScroll',
-            (mouseConstraint.mouse as any).mousewheel,
-        );
-
-        World.add(engine.world, mouseConstraint);
-
-        const textures = [
-            '/texture_pepe.png',
-            '/texture_mog.png',
-            '/texture_bonk.png',
-            '/texture_popcat.png',
-            '/texture_aixbt.webp',
-        ];
-
-        function createBall(fruitType: any) {
-            let textureIndex;
-
-            if (fruitType === 'one') {
-                textureIndex = 0;
-            } else if (fruitType === 'two') {
-                textureIndex = 1;
-            } else if (fruitType === 'three') {
-                textureIndex = 2;
-            } else if (fruitType === 'four') {
-                textureIndex = 3;
-            } else if (fruitType === 'five') {
-                textureIndex = 4;
-            }
-            // size randomiser
-            const ORIGINAL_SIZE = 100;
-            const baseScale = 0.5; // Base scale factor
-            const variationRange = 0.2; // Amount of random variation
-            const SIZE = baseScale + (Math.random() * variationRange);
-
-            const ball = Bodies.circle(
-                Math.round(Math.random() * width), // x
-                -30, // y
-                (SIZE * ORIGINAL_SIZE) / 2.5, // r
-                {
-                    angle: Math.PI * (Math.random() * 2 - 1),
-                    restitution: 0.5,
-                    render: {
-                        sprite: {
-                            texture: textures[textureIndex as number],
-                            xScale: SIZE,
-                            yScale: SIZE,
-                        },
-                    },
-                },
-            );
-
-            return ball;
+    const ball = Matter.Bodies.circle(x, y, radius, {
+      ...PHYSICS_CONFIG,
+      render: {
+        sprite: {
+          texture: textureConfig.texture,
+          xScale: randomScale,
+          yScale: randomScale
         }
+      }
+    });
 
-        let oneArray = [];
+    return ball;
+  };
 
-        Matter.Events.on(mouseConstraint, 'mousedown', function (event) {
-            const oneFruit = createBall('one');
-            World.add(engine.world, [oneFruit]);
-            oneArray.push(oneFruit);
-        });
+  private createInitialBalls = () => {
+    const balls = [];
+    for (let i = 0; i < 24; i++) {
+      const x = Math.random() * this.state.bodyWidth;
+      const y = Math.random() * -600; // Stagger initial drop heights
 
-        let twoArray = [];
+      const textureConfig = TEXTURE_CONFIGS[i % TEXTURE_CONFIGS.length];
+      // Randomize scale between 0.5 and 1.2 of the base scale
+      const randomScale = textureConfig.scale * (0.5 + Math.random() * 0.7);
+      const radius = (textureConfig.size / 2) * randomScale;
 
-        Matter.Events.on(mouseConstraint, 'mousedown', function (event) {
-            const twoFruit = createBall('two');
-            World.add(engine.world, [twoFruit]);
-            twoArray.push(twoFruit);
-        });
+      const ball = Matter.Bodies.circle(x, y, radius, {
+        ...PHYSICS_CONFIG,
+        render: {
+          sprite: {
+            texture: textureConfig.texture,
+            xScale: randomScale,
+            yScale: randomScale
+          }
+        }
+      });
+      balls.push(ball);
+    }
+    return balls;
+  };
 
-        let threeArray = [];
+  componentDidMount() {
+    if (!this.sceneRef.current) return;
 
-        Matter.Events.on(mouseConstraint, 'mousedown', function (event) {
-            const threeFruit = createBall('three');
-            World.add(engine.world, [threeFruit]);
-            threeArray.push(threeFruit);
-        });
+    const { Engine, Render, World, Mouse, MouseConstraint, Bodies } = Matter;
+    const { bodyWidth: width } = this.state;
+    const height = 320;
 
-        Matter.Events.on(mouseConstraint, 'mousedown', function (event) {
-            const fourFruit = createBall('four');
-            World.add(engine.world, [fourFruit]);
-            threeArray.push(fourFruit);
-        });
+    // Create engine with optimized settings
+    this.engine = Engine.create({
+      positionIterations: 6,
+      velocityIterations: 4,
+      constraintIterations: 2,
+      enableSleeping: true,
+    });
 
-        Matter.Events.on(mouseConstraint, 'mousedown', function (event) {
-            const fiveFruit = createBall('five');
-            World.add(engine.world, [fiveFruit]);
-            threeArray.push(fiveFruit);
-        });
+    // Create renderer
+    this.matterRender = Render.create({
+      element: this.sceneRef.current,
+      engine: this.engine,
+      options: {
+        width,
+        height,
+        pixelRatio: window.devicePixelRatio,
+        background: "transparent",
+        wireframes: false,
+        showSleeping: false,
+      }
+    });
 
-        var deviceOrientation = window.orientation;
+    // Start the renderer
+    Render.run(this.matterRender);
 
-        window.addEventListener(
-            'devicemotion',
-            function devicemotionHandler(event: DeviceMotionEvent) {
-                const accGravity = event.accelerationIncludingGravity;
-                const acc = event.acceleration;
+    // Create runner
+    this.runner = Matter.Runner.create();
+    Matter.Runner.run(this.runner, this.engine);
 
-                if (!accGravity || !acc) return;
+    // Add walls and floor
+    World.add(this.engine.world, [
+      Matter.Bodies.rectangle(-50, 0, 50, height * 3, { isStatic: true }),
+      Matter.Bodies.rectangle(width + 50, 0, 50, height * 3, { isStatic: true }),
+      Matter.Bodies.rectangle(width / 2, height + 30, width, 90, {
+        isStatic: true,
+        render: { fillStyle: "transparent" }
+      }),
+    ]);
 
-                var xg = (accGravity.x || 0) / 10;
-                var yg = (accGravity.y || 0) / 10;
-                var accX = acc.x || 0;
-                var accY = acc.y || 0;
+    // Create initial dropping balls
+    const initialBalls = this.createInitialBalls();
+    initialBalls.forEach((ball, i) => {
+      setTimeout(() => World.add(this.engine.world, ball), 400 * (i + 1));
+    });
 
-                switch (deviceOrientation) {
-                    case 0:
-                        engine.world.gravity.x = xg + accX;
-                        engine.world.gravity.y = -yg + accY;
-                        break;
-                    case 90:
-                        engine.world.gravity.x = -yg - accX;
-                        engine.world.gravity.y = -xg + accX;
-                        break;
-                    case -90:
-                        engine.world.gravity.x = yg + accX;
-                        engine.world.gravity.y = xg - accX;
-                        break;
-                    case 180:
-                        engine.world.gravity.x = -xg - accX;
-                        engine.world.gravity.y = yg - accX;
-                }
+    // Add mouse control
+    const mouse = Mouse.create(this.matterRender.canvas);
+    const mouseConstraint = MouseConstraint.create(this.engine, {
+      mouse: mouse,
+      constraint: {
+        stiffness: 0.2,
+        render: {
+          visible: false
+        }
+      }
+    });
 
-                if (window.navigator.userAgent.indexOf('Android') > 0) {
-                    engine.world.gravity.x = -engine.world.gravity.x;
-                    engine.world.gravity.y = -engine.world.gravity.y;
-                }
-            },
-        );
+    // NOTE: Remove mouse wheel events
+    // mouseConstraint.mouse.element.removeEventListener("mousewheel", mouseConstraint.mouse.mousewheel);
+    // mouseConstraint.mouse.element.removeEventListener("DOMMouseScroll", mouseConstraint.mouse.mousewheel);
 
-        Engine.run(engine);
+    World.add(this.engine.world, mouseConstraint);
 
-        Render.run(render);
+    // NOTE: Add click event for random ball drops
+    // this.matterRender.canvas.addEventListener("click", () => {
+    //   World.add(this.engine.world, this.createRandomBall());
+    // });
+  }
+
+  componentWillUnmount() {
+    // Stop the engine and runner first
+    Matter.Runner.stop(this.runner);
+    Matter.Engine.clear(this.engine);
+
+    // Stop the renderer
+    if (this.matterRender) {
+      Matter.Render.stop(this.matterRender);
     }
 
-
-    render() {
-        return (
-            <>
-                <div className="relative overflow-hidden"
-                    style={{
-                        height: "320px",
-                        width: this.state.bodyWidth
-                    }}
-                >
-                    <div ref="scene" className="relative filter brightness-90" />
-                    {/* <h1 className="text pointer-events-none text-[4rem] md:text-[6rem] absolute bottom-[50%] left-[10%]">
-            Please Click!!
-          </h1> */}
-                    <Logo className="w-40 absolute bottom-[0%] left-[1rem] pointer-events-none text-white" />
-                </div>
-            </>
-        );
+    // Clear all instances
+    if (this.engine) {
+      Matter.World.clear(this.engine.world, false);
+      Matter.Engine.clear(this.engine);
     }
+
+    // Remove the canvas element
+    if (this.matterRender && this.matterRender.canvas) {
+      this.matterRender.canvas.remove();
+    }
+
+    // Nullify references
+    this.engine = null as any;
+    this.matterRender = null as any;
+    this.runner = null as any;
+  }
+
+  render() {
+    return (
+      <div
+        className="relative overflow-hidden"
+        style={{
+          height: "320px",
+          width: this.state.bodyWidth,
+        }}
+      >
+        <div ref={this.sceneRef} className="relative filter brightness-90" />
+        <Logo className="w-40 absolute bottom-[10%] left-[1rem] pointer-events-none text-white" />
+      </div>
+    );
+  }
 }
 
 export default HeaderPhysics;
