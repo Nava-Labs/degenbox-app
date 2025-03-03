@@ -164,7 +164,7 @@ class HeaderPhysics extends React.Component<{}, HeaderPhysicsState> {
     // Create initial dropping balls
     const initialBalls = this.createInitialBalls();
     initialBalls.forEach((ball, i) => {
-      setTimeout(() => World.add(this.engine.world, ball), 150 * (i + 1));
+      setTimeout(() => World.add(this.engine.world, ball), 100 * (i + 1));
     });
 
     // Add mouse control
