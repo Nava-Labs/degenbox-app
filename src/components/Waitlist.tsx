@@ -17,6 +17,8 @@ import {
 
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
+// import {HeaderPhysics} from "./HeaderPhysics";
+import HeaderPhysics from "./HeaderPhysics";
 
 export default function Waitlist() {
 
@@ -34,8 +36,8 @@ export default function Waitlist() {
   useEffect(() => {
     const fetchCount = async () => {
       const { count, error } = await supabase
-      .from('waitlist')
-      .select('*', { count: 'exact', head: true })
+        .from('waitlist')
+        .select('*', { count: 'exact', head: true })
 
       console.log("Error ", error, count)
       setWaitlistCount(count || 5500);
@@ -76,12 +78,13 @@ export default function Waitlist() {
 
   return (
     <div className="w-full flex flex-col items-center bg-[#EFF6FF]">
-      <div className="flex justify-center items-center overflow-hidden bg-[#EFF6FF]">
-        <img
+      <div className="flex justify-center items-center overflow-hidden bg-[#EFF6FF] -mb-8">
+        {/* <img
           src="/cover-waitlist2.png"
           alt="Waitlist DegenBox Illustration"
           className="h-full object-cover"
-        />
+        /> */}
+        <HeaderPhysics />
       </div>
 
       <div className="flex flex-col space-y-2 px-4 pt-5 pb-8">
