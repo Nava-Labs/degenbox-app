@@ -23,7 +23,18 @@ const TEXTURE_CONFIGS = [
   { texture: "/texture_pepe.png", size: 64, scale: 1 },       // 64x64
   { texture: "/texture_popcat.png", size: 64, scale: 1 },     // 64x64
   { texture: "/texture_aixbt.webp", size: 80, scale: 0.8 },   // 80x80
-  { texture: "/texture_mog.png", size: 64, scale: 1 }         // 64x64
+  { texture: "/texture_mog.png", size: 64, scale: 1 },         // 64x64
+  { texture: "/texture_ai16z.png", size: 64, scale: 1 },         // 64x64
+  { texture: "/texture_apu.png", size: 64, scale: 1 },         // 64x64
+  { texture: "/texture_babydoge.png", size: 64, scale: 1 },         // 64x64
+  { texture: "/texture_brett.png", size: 64, scale: 1 },         // 64x64
+  { texture: "/texture_floki.png", size: 64, scale: 1 },         // 64x64
+  { texture: "/texture_fwog.png", size: 64, scale: 1 },         // 64x64
+  { texture: "/texture_giga.png", size: 64, scale: 1 },         // 64x64
+  { texture: "/texture_pengu.png", size: 64, scale: 1 },         // 64x64
+  { texture: "/texture_ponke.png", size: 64, scale: 1 },         // 64x64
+  { texture: "/texture_griffain.png", size: 64, scale: 1 },         // 64x64
+  { texture: "/texture_shib.png", size: 64, scale: 1 },         // 64x64
 ] as const;
 
 interface HeaderPhysicsState {
@@ -80,13 +91,13 @@ class HeaderPhysics extends React.Component<{}, HeaderPhysicsState> {
 
   private createInitialBalls = () => {
     const balls = [];
-    for (let i = 0; i < 32; i++) {
+    for (let i = 0; i < 80; i++) {
       const x = Math.random() * this.state.bodyWidth;
       const y = Math.random() * -600; // Stagger initial drop heights
 
       const textureConfig = TEXTURE_CONFIGS[i % TEXTURE_CONFIGS.length];
       // Randomize scale between 0.5 and 1.2 of the base scale
-      const randomScale = textureConfig.scale * (0.5 + Math.random() * 0.7);
+      const randomScale = textureConfig.scale * (0.5 + Math.random() * 0.5);
       const radius = (textureConfig.size / 2) * randomScale;
 
       const ball = Matter.Bodies.circle(x, y, radius, {
@@ -153,7 +164,7 @@ class HeaderPhysics extends React.Component<{}, HeaderPhysicsState> {
     // Create initial dropping balls
     const initialBalls = this.createInitialBalls();
     initialBalls.forEach((ball, i) => {
-      setTimeout(() => World.add(this.engine.world, ball), 300 * (i + 1));
+      setTimeout(() => World.add(this.engine.world, ball), 150 * (i + 1));
     });
 
     // Add mouse control
